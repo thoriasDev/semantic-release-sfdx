@@ -1,7 +1,7 @@
-const verifyConditions = require('./lib/verify')
-const prepare = require('./lib/prepare')
+import { verifyConditions } from './src/verify.js'
+import { prepare } from './src/prepare.js'
 
-module.exports = {
-  verifyConditions,
-  prepare,
+export default {
+    verifyConditions,
+    prepare,
 }

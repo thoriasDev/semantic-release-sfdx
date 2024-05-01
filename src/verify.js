@@ -1,7 +1,7 @@
-const fs = require('fs')
-const util = require('./util')
+import fs from 'node:fs';
+import { getDefaultDevHub } from './util.js';
 
-module.exports = async (pluginConfig, { logger }) => {
+export const verifyConditions = async (pluginConfig, { logger }) => {
   if (!fs.existsSync('sfdx-project.json')) {
     throw new Error('This is not and sfdx project. Please make sure sfdx-project.json exists')
   }
@@ -14,9 +14,9 @@ module.exports = async (pluginConfig, { logger }) => {
   }
 
   // check if default is set
-  return util.getDefaultDevHub().then(defaultDevHub => {
+  return getDefaultDevHub().then(defaultDevHub => {
     if (!defaultDevHub) {
-      throw new Error(`Default dev hub not defined`)
+      throw new Error('Default dev hub not defined')
     }
   })
 }

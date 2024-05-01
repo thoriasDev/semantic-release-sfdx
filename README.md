@@ -1,5 +1,11 @@
 # semantic-release-sfdx
 
+## Aside
+
+This is a fork of https://github.com/leboff/semantic-release-sfdx with the following changes:
+    * Updated to use the latest version of sfdx-node
+    * ESM module support
+
 > [semantic-release](https://github.com/semantic-release/semantic-release) plugin for publishing an SFDX package
 
 ## Prerequisites
@@ -79,13 +85,8 @@ To disable the verification of your SFDX project, DevHub and installationkey:
 }
 ```
 
-## Example
-
-See a second generation package being released with this plugin [here](https://github.com/mdapi-issues/managed-package-2nd-gen-dummy).
-
-- [package.json](https://github.com/mdapi-issues/managed-package-2nd-gen-dummy/blob/main/.github/workflows/default.yml)
-- [GitHub Actions configuration](https://github.com/mdapi-issues/managed-package-2nd-gen-dummy/blob/main/package.json)
-
 ## Credits
 
 Thanks to https://github.com/carlos-cubas/semantic-release-gcp.git for kicking off point
+
+Thanks to https://github.com/leboff/semantic-release-sfdx for creating the original package

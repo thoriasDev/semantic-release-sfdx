@@ -1,27 +1,31 @@
-name: Release
+name: publish
 
 on:
-  push:
-    branches:
-      - master
-  pull_request:
-    branches:
-      - master
+    push:
+        branches:
+            - master
 
 jobs:
-  default:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-      - uses: actions/setup-node@v1
-        with:
-          node-version: 14
-      - name: Install dependencies
-        run: yarn
-      - name: Release package
-        run: npx semantic-release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+    npm-publish:
+        runs-on: ubuntu-latest
+        permissions:
+            packages: write
+            contents: read
+        steps:
+            - uses: actions/checkout@v4
+              with:
+                  persist-credentials: false
+            - uses: actions/setup-node@v4
+              with:
+                  node-version: 18
+                  cache: 'yarn'
+            - name: Install
+              run: |
+                  yarn install --immutable
+            - run: yarn build
+            - name: publish
+              run: npx semantic-release
+              env:
+                  GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+                  NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+                  HUSKY: 0

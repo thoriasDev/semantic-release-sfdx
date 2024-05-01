@@ -1,19 +1,20 @@
 {
-  "name": "semantic-release-sfdx",
+  "name": "semantic-release-sfdx2",
   "description": "Set of semantic-release plugins to publish SFDX Package",
-  "version": "0.0.0-development",
+  "version": "1.0.0",
   "engines": {
-    "node": ">=8"
+    "node": ">=16"
   },
-  "author": "Bryan Leboff",
+  "type": "module",
+  "author": "Ross Reicks forked from Bryan Leboff",
   "repository": {
     "type": "git",
-    "url": "https://github.com/leboff/semantic-release-sfdx.git"
+    "url": "https://github.com/rossreicks/semantic-release-sfdx.git"
   },
   "bugs": {
-    "url": "https://github.com/leboff/semantic-release-sfdx/issues"
+    "url": "https://github.com/rossreicks/semantic-release-sfdx/issues"
   },
-  "homepage": "https://github.com/leboff/semantic-release-sfdx#readme",
+  "homepage": "https://github.com/rossreicks/semantic-release-sfdx#readme",
   "keywords": [
     "sfdx",
     "salesforce",
@@ -24,48 +25,22 @@
     "version"
   ],
   "scripts": {
-    "lint": "eslint lib index.js",
-    "prettier": "prettier --write --list-different '**/*.js?(on)'",
-    "semantic-release": "semantic-release"
-  },
-  "config": {
-    "commitizen": {
-      "path": "cz-conventional-changelog"
-    }
+    "semantic-release": "semantic-release",
+    "prettier": "prettier --write ."
   },
   "dependencies": {
-    "@semantic-release/error": "^2.1.0",
-    "lodash": "^4.17.11",
-    "sfdx-node": "^2.2.0"
+    "@semantic-release/error": "^4.0.0",
+    "lodash.find": "^4.6.0",
+    "lodash.template": "^4.5.0",
+    "sfdx-node": "^3.8.0"
   },
   "devDependencies": {
-    "cz-conventional-changelog": "^2.0.0",
-    "eslint": "^5.1.0",
-    "eslint-config-prettier": "^2.5.0",
-    "eslint-config-standard": "^11.0.0",
-    "eslint-plugin-import": "^2.7.0",
-    "eslint-plugin-node": "^7.0.1",
-    "eslint-plugin-prettier": "^2.3.0",
-    "eslint-plugin-promise": "^3.5.0",
-    "eslint-plugin-standard": "^3.0.1",
-    "prettier": "1.13.7",
-    "semantic-release": "^15.4.1",
-    "validate-commit-msg": "^2.14.0"
+    "@semantic-release/npm": "^12.0.0",
+    "prettier": "^3.2.5",
+    "semantic-release": "^23.0.8"
   },
   "peerDependencies": {
     "semantic-release": ">=11.0.0"
-  },
-  "eslintConfig": {
-    "extends": [
-      "standard",
-      "prettier"
-    ],
-    "plugins": [
-      "prettier"
-    ],
-    "rules": {
-      "prettier/prettier": 2
-    }
   },
   "files": [
     "lib",
@@ -74,19 +49,12 @@
   ],
   "license": "MIT",
   "main": "index.js",
-  "prettier": {
-    "printWidth": 120,
-    "singleQuote": true,
-    "bracketSpacing": true,
-    "trailingComma": "es5",
-    "semi": false
-  },
   "publishConfig": {
     "access": "public"
   },
   "release": {
     "branches": [
-      "master"
+      "main"
     ]
   }
 }
