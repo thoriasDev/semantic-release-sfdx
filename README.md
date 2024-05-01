@@ -12,6 +12,18 @@ This is a fork of https://github.com/leboff/semantic-release-sfdx with the follo
 
 You must have SFDX installed and connected to your DevHub (see Authorization in the [Salesforce DX Developer Guide](https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_auth.htm)).
 
+## Installation
+
+```bash
+npm install -D semantic-release-sfdx2
+```
+
+or using yarn:
+
+```bash
+yarn add -D semantic-release-sfdx2
+```
+
 ## Configuration
 
 To enable this plugin, simply add the following to your `package.json` or [release configuration file](https://semantic-release.gitbook.io/semantic-release/usage/configuration).
@@ -19,7 +31,7 @@ To enable this plugin, simply add the following to your `package.json` or [relea
 ```json
 {
   "release": {
-    "plugins": ["semantic-release-sfdx"]
+    "plugins": ["semantic-release-sfdx2"]
   }
 }
 ```
@@ -39,7 +51,7 @@ To use another DevHub, set the environment variable `SFDX_DEFAULTDEVHUBUSERNAME`
   "release": {
     "plugins": [
       [
-        "semantic-release-sfdx",
+        "semantic-release-sfdx2",
         {
           "codecoverage": true,
           "promote": true,
