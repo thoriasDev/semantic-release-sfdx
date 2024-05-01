@@ -43,7 +43,7 @@
     "semantic-release": ">=11.0.0"
   },
   "files": [
-    "lib",
+    "src",
     "templates",
     "index.js"
   ],
@@ -51,10 +51,5 @@
   "main": "index.js",
   "publishConfig": {
     "access": "public"
-  },
-  "release": {
-    "branches": [
-      "main"
-    ]
   }
 }
