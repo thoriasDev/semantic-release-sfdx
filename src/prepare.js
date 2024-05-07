@@ -1,6 +1,7 @@
 import { getPackage } from "./util.js";
 import sfdx from "sfdx-node";
 import fs from "node:fs";
+import path from "node:path";
 import find from "lodash.find";
 
 export const prepare = async (
@@ -22,6 +23,7 @@ export const prepare = async (
 		versionnumber: packageVersion,
 		json: true,
 		wait: pluginConfig.versionCreateWait || 15,
+        definitionfile: pluginConfig.definitionfile
 	};
 
 	if (pluginConfig.installationkey) {
