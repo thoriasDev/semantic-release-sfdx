@@ -50,4 +50,14 @@ export const prepare = async (
 			json: true,
 		});
 	}
+
+    try {
+        const nextVersion = `${version}.NEXT`;
+
+        pkg.versionNumber = nextVersion;
+
+        fs.writeFileSync("sfdx-project.json", JSON.stringify(project, null, 2));
+    } catch {
+        logger.error("Failed to update sfdx-project.json");
+    }
 };
