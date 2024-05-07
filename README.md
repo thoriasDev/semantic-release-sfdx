@@ -1,12 +1,14 @@
 # semantic-release-sfdx
 
+[semantic-release](https://github.com/semantic-release/semantic-release) plugin for publishing an SFDX package
+
 ## Aside
 
 This is a fork of https://github.com/leboff/semantic-release-sfdx with the following changes:
-    * Updated to use the latest version of sfdx-node
-    * ESM module support
 
-> [semantic-release](https://github.com/semantic-release/semantic-release) plugin for publishing an SFDX package
+* Updated to use the latest version of sfdx-node
+* ESM module support
+* Add more options for configuration
 
 ## Prerequisites
 
@@ -45,14 +47,14 @@ To use another DevHub, set the environment variable `SFDX_DEFAULTDEVHUBUSERNAME`
 ### Advanced Configuration
 
 You can configure the plugin by providing an object instead of a string in the `plugins` array, available options are:
-    * `codecoverage` - boolean - whether to run tests with code coverage
-    * `promote` - boolean - whether to promote the package version
-    * `installationkey` - string - the installation key for the package
-    * `versionCreateWait` - number - the wait time for package version creation. Defaults to 15 minutes.
-    * `definitionfile` - string - the path to the definition file
-    * `devhubusername` - string - the dev hub username, if you wish to override the default
-    * `skipvalidation` - boolean - whether to skip validation
-    * `skipancestorcheck` - boolean - whether to skip ancestor check
+* `codecoverage` - boolean - whether to run tests with code coverage
+* `promote` - boolean - whether to promote the package version
+* `installationkey` - string - the installation key for the package
+* `versionCreateWait` - number - the wait time for package version creation. Defaults to 15 minutes.
+* `definitionfile` - string - the path to the definition file
+* `devhubusername` - string - the dev hub username, if you wish to override the default
+* `skipvalidation` - boolean - whether to skip validation
+* `skipancestorcheck` - boolean - whether to skip ancestor check
 
 **static config via `package.json`**
 
