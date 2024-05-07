@@ -36,10 +36,18 @@ export const prepare = async (
 		versionCreateOptions.codecoverage = true;
 	}
 
-	const { SubscriberPackageVersionId } =
+	const createResult =
 		await sfdx.force.package.versionCreate(versionCreateOptions);
+
+    logger.log('Package Version Create Result: ' + JSON.stringify(createResult));
+
+    const { subscriberPackageVersionId } = createResult;
+
 	const list = await sfdx.force.package.versionList();
-	const latestResult = find(list, { SubscriberPackageVersionId });
+
+    logger.log('Package Version List: ' + JSON.stringify(list));
+
+	const latestResult = find(list, { SubscriberPackageVersionId: subscriberPackageVersionId });
 
 	logger.log(`Package Version Create Result: ${JSON.stringify(latestResult)}`);
 
@@ -57,6 +65,14 @@ export const prepare = async (
         const nextVersion = `${version}.NEXT`;
 
         pkg.versionNumber = nextVersion;
+
+        if (!project.packageAliases) {
+            project.packageAliases = {};
+        }
+
+        if (subscriberPackageVersionId) {
+            project.packageAliases[`${pkg.package}@${version}-0`] = subscriberPackageVersionId;
+        }
 
         fs.writeFileSync("sfdx-project.json", JSON.stringify(project, null, 2));
     } catch {
