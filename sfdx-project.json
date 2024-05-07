@@ -1,0 +1,19 @@
+{
+  "name": "Semantic Release SFDX",
+  "sfdcLoginUrl": "https://login.salesforce.com",
+  "sourceApiVersion": "60.0",
+  "packageDirectories": [
+    {
+      "path": "force-app",
+      "package": "Semantic Release SFDX",
+      "versionNumber": "0.1.2.NEXT",
+      "default": true
+    }
+  ],
+  "packageAliases": {
+    "Semantic Release SFDX": "0Hoak00000006rpCAA",
+    "Semantic Release SFDX@0.1.0-0": "04tak0000001JILAA2",
+    "Semantic Release SFDX@0.1.1-0": "04tak0000001JJxAAM",
+    "Semantic Release SFDX@0.1.2-0": "04tak0000001JNBAA2"
+  }
+}

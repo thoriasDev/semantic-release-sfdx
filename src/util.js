@@ -17,3 +17,15 @@ export const getPackage = (project) => {
 
     return defaultPackage;
 };
+
+export const removeUndefined = (obj) => {
+    const newObj = {};
+
+    Object.keys(obj).forEach(key => {
+        if (obj[key] !== undefined) {
+            newObj[key] = obj[key];
+        }
+    });
+
+    return newObj;
+}

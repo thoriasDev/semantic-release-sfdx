@@ -1,81 +1,109 @@
-import { getPackage } from "./util.js";
-import sfdx from "sfdx-node";
-import fs from "node:fs";
-import path from "node:path";
-import find from "lodash.find";
+import { getPackage, removeUndefined } from './util.js'
+import sfdx from 'sfdx-node'
+import fs from 'node:fs'
+import find from 'lodash.find'
 
-export const prepare = async (
-	pluginConfig,
-	{ nextRelease: { version }, logger },
-) => {
-	const packageVersion = `${version}.0`;
+/**
+ * @typedef {Object} NextRelease
+ * @property {string} version - The version of the next release. For example, 1.0.0
+ *
+ * @typedef {Object} Logger
+ * @property {function} log - Log information.
+ *
+ * @typedef {Object} PluginConfig
+ * @property {string} [installationkey] - The installation key for the package, if omitted the key installationkeybypass is used.
+ * @property {boolean} [promote] - Whether to promote the package version.
+ * @property {number} [versionCreateWait] - The wait time for package version creation. Defaults to 15 minutes.
+ * @property {string} [definitionfile] - The path to the definition file.
+ * @property {boolean} [codecoverage] - Whether to enable code coverage.
+ * @property {string} [devhubusername] - The dev hub username, if you wish to override the default.
+ * @property {boolean} [skipvalidation] - Whether to skip validation.
+ * @property {boolean} [skipancestorcheck] - Whether to skip ancestor check.
+ *
+ * @param {PluginConfig} pluginConfig - The plugin configuration.
+ * @param {NextRelease} context.nextRelease - The next release.
+ * @param {Logger} context.logger - The logger.
+ */
+export const prepare = async (pluginConfig, { nextRelease: { version }, logger }) => {
+  const project = JSON.parse(fs.readFileSync('sfdx-project.json'))
 
-	const project = JSON.parse(fs.readFileSync("sfdx-project.json"));
+  const pkg = getPackage(project)
 
-	const pkg = getPackage(project);
+  if (!version) {
+    throw new Error('No version found to release')
+  }
 
-	logger.log(`Creating new package version ${pkg.package}:${packageVersion}`);
+  if (pluginConfig.promote && !pluginConfig.codecoverage) {
+    throw new Error('Cannot promote package version without code coverage')
+  }
 
-	const versionCreateOptions = {
-		_rejectOnError: true,
-		path: pkg.path,
-		tag: version,
-		versionnumber: packageVersion,
-		json: true,
-		wait: pluginConfig.versionCreateWait || 15,
-        definitionfile: pluginConfig.definitionfile
-	};
+  const versionCreateOptions = {
+    _rejectOnError: true,
+    path: pkg.path,
+    tag: version,
+    json: true,
+    versionnumber: `${version}.0`,
+    wait: pluginConfig.versionCreateWait || 15,
+    definitionfile: pluginConfig.definitionfile,
+    targetdevhubusername: pluginConfig.devhubusername,
+    skipvalidation: pluginConfig.skipvalidation,
+    skipancestorcheck: pluginConfig.skipancestorcheck,
+  }
 
-	if (pluginConfig.installationkey) {
-		versionCreateOptions.installationkey = pluginConfig.installationkey;
-	} else {
-		versionCreateOptions.installationkeybypass = true;
-	}
+  logger.log(`Creating new package version ${pkg.package}@${versionCreateOptions.versionnumber}`)
 
-	if (pluginConfig.codecoverage) {
-		versionCreateOptions.codecoverage = true;
-	}
+  if (pluginConfig.installationkey) {
+    versionCreateOptions.installationkey = pluginConfig.installationkey
+  } else {
+    versionCreateOptions.installationkeybypass = true
+  }
 
-	const createResult =
-		await sfdx.force.package.versionCreate(versionCreateOptions);
+  if (pluginConfig.codecoverage) {
+    versionCreateOptions.codecoverage = true
+  }
 
-    logger.log('Package Version Create Result: ' + JSON.stringify(createResult));
+  logger.log('Package Version Create Options: ' + JSON.stringify(versionCreateOptions))
 
-    const { subscriberPackageVersionId } = createResult;
+  const createResult = await sfdx.force.package.versionCreate(removeUndefined(versionCreateOptions))
 
-	const list = await sfdx.force.package.versionList();
+  logger.log('Package Version Create Result: ' + JSON.stringify(createResult))
 
-    logger.log('Package Version List: ' + JSON.stringify(list));
+  const { SubscriberPackageVersionId } = createResult
 
-	const latestResult = find(list, { SubscriberPackageVersionId: subscriberPackageVersionId });
+  const list = await sfdx.force.package.versionList(removeUndefined({ targetdevhubusername: pluginConfig.devhubusername }))
 
-	logger.log(`Package Version Create Result: ${JSON.stringify(latestResult)}`);
+  logger.log('Package Version List: ' + JSON.stringify(list))
 
-	if (pluginConfig.promote) {
-		logger.log("Promoting Package Version");
-		await sfdx.force.package.versionPromote({
-			_rejectOnError: true,
-			package: latestResult.SubscriberPackageVersionId,
-			noprompt: true,
-			json: true,
-		});
-	}
+  const latestResult = find(list, { SubscriberPackageVersionId })
 
-    try {
-        const nextVersion = `${version}.NEXT`;
+  logger.log(`Package Version Create Result: ${JSON.stringify(latestResult)}`)
 
-        pkg.versionNumber = nextVersion;
+  if (pluginConfig.promote) {
+    logger.log('Promoting Package Version')
+    await sfdx.force.package.versionPromote(removeUndefined({
+      _rejectOnError: true,
+      package: latestResult.SubscriberPackageVersionId,
+      noprompt: true,
+      json: true,
+      targetdevhubusername: pluginConfig.devhubusername,
+    }))
+  }
 
-        if (!project.packageAliases) {
-            project.packageAliases = {};
-        }
+  try {
+    const nextVersion = `${version}.NEXT`
 
-        if (subscriberPackageVersionId) {
-            project.packageAliases[`${pkg.package}@${version}-0`] = subscriberPackageVersionId;
-        }
+    pkg.versionNumber = nextVersion
 
-        fs.writeFileSync("sfdx-project.json", JSON.stringify(project, null, 2));
-    } catch {
-        logger.error("Failed to update sfdx-project.json");
+    if (!project.packageAliases) {
+      project.packageAliases = {}
     }
-};
+
+    if (SubscriberPackageVersionId) {
+      project.packageAliases[`${pkg.package}@${version}-0`] = SubscriberPackageVersionId
+    }
+
+    fs.writeFileSync('sfdx-project.json', JSON.stringify(project, null, 2))
+  } catch(ex) {
+    logger.error('Failed to update sfdx-project.json', ex)
+  }
+}
