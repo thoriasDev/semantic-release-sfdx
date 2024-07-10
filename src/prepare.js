@@ -24,7 +24,8 @@ import find from 'lodash.find'
  * @param {NextRelease} context.nextRelease - The next release.
  * @param {Logger} context.logger - The logger.
  */
-export const prepare = async (pluginConfig, { nextRelease, logger }) => {
+export const prepare = async (pluginConfig, context) => {
+  const { nextRelease, logger, dryRun } = context;
   const { version } = nextRelease;
 
   const project = JSON.parse(fs.readFileSync('sfdx-project.json'))
@@ -37,6 +38,14 @@ export const prepare = async (pluginConfig, { nextRelease, logger }) => {
 
   if (pluginConfig.promote && !pluginConfig.codecoverage) {
     throw new Error('Cannot promote package version without code coverage')
+  }
+
+  if (dryRun) {
+    logger.log('Dry run: Package version creation skipped')
+    context.nextRelease.installUrl = 'https://example.com';
+    context.nextRelease.subscriberPackageVersionId = '04t000000000000';
+    context.nextRelease.packageVersionId = '04t000000000000';
+    return
   }
 
   const versionCreateOptions = {
@@ -100,10 +109,14 @@ export const prepare = async (pluginConfig, { nextRelease, logger }) => {
       project.packageAliases = {}
     }
 
+    logger.log('Updating sfdx-project.json')
+
     if (SubscriberPackageVersionId) {
         const key = `${pkg.package}@${version}-0`
 
       project.packageAliases[key] = SubscriberPackageVersionId
+
+      logger.log('Updating next release with install url and subscriber package version id', { InstallUrl, SubscriberPackageVersionId });
 
       nextRelease.installUrl = InstallUrl;
       nextRelease.subscriberPackageVersionId = SubscriberPackageVersionId;
