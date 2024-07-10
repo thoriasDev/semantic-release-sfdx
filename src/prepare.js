@@ -101,13 +101,16 @@ export const prepare = async (pluginConfig, { nextRelease, logger }) => {
     }
 
     if (SubscriberPackageVersionId) {
-      project.packageAliases[`${pkg.package}@${version}-0`] = SubscriberPackageVersionId
+        const key = `${pkg.package}@${version}-0`
+
+      project.packageAliases[key] = SubscriberPackageVersionId
+
+      nextRelease.installUrl = InstallUrl;
+      nextRelease.subscriberPackageVersionId = SubscriberPackageVersionId;
+      nextRelease.packageVersionId = SubscriberPackageVersionId;
     }
 
     fs.writeFileSync('sfdx-project.json', JSON.stringify(project, null, 2))
-
-    nextRelease.installUrl = InstallUrl;
-    nextRelease.subscriberPackageVersionId = SubscriberPackageVersionId;
   } catch(ex) {
     logger.error('Failed to update sfdx-project.json', ex)
   }
