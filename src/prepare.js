@@ -24,7 +24,9 @@ import find from 'lodash.find'
  * @param {NextRelease} context.nextRelease - The next release.
  * @param {Logger} context.logger - The logger.
  */
-export const prepare = async (pluginConfig, { nextRelease: { version }, logger }) => {
+export const prepare = async (pluginConfig, { nextRelease, logger }) => {
+  const { version } = nextRelease;
+
   const project = JSON.parse(fs.readFileSync('sfdx-project.json'))
 
   const pkg = getPackage(project)
@@ -68,7 +70,7 @@ export const prepare = async (pluginConfig, { nextRelease: { version }, logger }
 
   logger.log('Package Version Create Result: ' + JSON.stringify(createResult))
 
-  const { SubscriberPackageVersionId } = createResult
+  const { InstallUrl, SubscriberPackageVersionId } = createResult
 
   const list = await sfdx.force.package.versionList(removeUndefined({ targetdevhubusername: pluginConfig.devhubusername }))
 
@@ -103,6 +105,9 @@ export const prepare = async (pluginConfig, { nextRelease: { version }, logger }
     }
 
     fs.writeFileSync('sfdx-project.json', JSON.stringify(project, null, 2))
+
+    nextRelease.installUrl = InstallUrl;
+    nextRelease.subscriberPackageVersionId = SubscriberPackageVersionId;
   } catch(ex) {
     logger.error('Failed to update sfdx-project.json', ex)
   }
