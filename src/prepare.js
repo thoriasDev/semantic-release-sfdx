@@ -81,7 +81,7 @@ export const prepare = async (pluginConfig, context) => {
 
   logger.log('Package Version Create Result: ' + JSON.stringify(createResult))
 
-  const { InstallUrl, SubscriberPackageVersionId } = createResult
+  const { SubscriberPackageVersionId } = createResult
 
   const list = await sfdx.force.package.versionList(removeUndefined({ targetdevhubusername: pluginConfig.devhubusername }))
 
@@ -90,6 +90,8 @@ export const prepare = async (pluginConfig, context) => {
   const latestResult = find(list, { SubscriberPackageVersionId })
 
   logger.log(`Package Version Create Result: ${JSON.stringify(latestResult)}`)
+
+  const { InstallUrl } = latestResult
 
   if (pluginConfig.promote) {
     logger.log('Promoting Package Version')
@@ -125,6 +127,9 @@ export const prepare = async (pluginConfig, context) => {
       nextRelease.installUrl = InstallUrl
       nextRelease.subscriberPackageVersionId = SubscriberPackageVersionId
       nextRelease.packageVersionId = SubscriberPackageVersionId
+      context.nextRelease.notes += '\n\n' + `Install URL: ${InstallUrl}`;
+      context.installUrl = InstallUrl;
+      context.packageVersionId = SubscriberPackageVersionId;
     }
 
     fs.writeFileSync('sfdx-project.json', JSON.stringify(project, null, 2))
