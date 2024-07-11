@@ -28,6 +28,8 @@ export const prepare = async (pluginConfig, context) => {
   const { nextRelease, logger, dryRun } = context;
   const { version } = nextRelease;
 
+  logger.log('Preparing package version', JSON.stringify(context));
+
   const project = JSON.parse(fs.readFileSync('sfdx-project.json'))
 
   const pkg = getPackage(project)
