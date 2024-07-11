@@ -25,10 +25,10 @@ import find from 'lodash.find'
  * @param {Logger} context.logger - The logger.
  */
 export const prepare = async (pluginConfig, context) => {
-  const { nextRelease, logger, dryRun } = context;
-  const { version } = nextRelease;
+  const { nextRelease, logger, dryRun } = context
+  const { version } = nextRelease
 
-  logger.log('Preparing package version', JSON.stringify(context));
+  logger.log('Preparing package version', JSON.stringify(context))
 
   const project = JSON.parse(fs.readFileSync('sfdx-project.json'))
 
@@ -44,9 +44,9 @@ export const prepare = async (pluginConfig, context) => {
 
   if (dryRun) {
     logger.log('Dry run: Package version creation skipped')
-    context.nextRelease.installUrl = 'https://example.com';
-    context.nextRelease.subscriberPackageVersionId = '04t000000000000';
-    context.nextRelease.packageVersionId = '04t000000000000';
+    context.nextRelease.installUrl = 'https://example.com'
+    context.nextRelease.subscriberPackageVersionId = '04t000000000000'
+    context.nextRelease.packageVersionId = '04t000000000000'
     return
   }
 
@@ -93,13 +93,15 @@ export const prepare = async (pluginConfig, context) => {
 
   if (pluginConfig.promote) {
     logger.log('Promoting Package Version')
-    await sfdx.force.package.versionPromote(removeUndefined({
-      _rejectOnError: true,
-      package: latestResult.SubscriberPackageVersionId,
-      noprompt: true,
-      json: true,
-      targetdevhubusername: pluginConfig.devhubusername,
-    }))
+    await sfdx.force.package.versionPromote(
+      removeUndefined({
+        _rejectOnError: true,
+        package: latestResult.SubscriberPackageVersionId,
+        noprompt: true,
+        json: true,
+        targetdevhubusername: pluginConfig.devhubusername,
+      })
+    )
   }
 
   try {
@@ -114,19 +116,19 @@ export const prepare = async (pluginConfig, context) => {
     logger.log('Updating sfdx-project.json')
 
     if (SubscriberPackageVersionId) {
-        const key = `${pkg.package}@${version}-0`
+      const key = `${pkg.package}@${version}-0`
 
       project.packageAliases[key] = SubscriberPackageVersionId
 
-      logger.log('Updating next release with install url and subscriber package version id', { InstallUrl, SubscriberPackageVersionId });
+      logger.log('Updating next release with install url and subscriber package version id', { InstallUrl, SubscriberPackageVersionId })
 
-      nextRelease.installUrl = InstallUrl;
-      nextRelease.subscriberPackageVersionId = SubscriberPackageVersionId;
-      nextRelease.packageVersionId = SubscriberPackageVersionId;
+      nextRelease.installUrl = InstallUrl
+      nextRelease.subscriberPackageVersionId = SubscriberPackageVersionId
+      nextRelease.packageVersionId = SubscriberPackageVersionId
     }
 
     fs.writeFileSync('sfdx-project.json', JSON.stringify(project, null, 2))
-  } catch(ex) {
+  } catch (ex) {
     logger.error('Failed to update sfdx-project.json', ex)
   }
 }

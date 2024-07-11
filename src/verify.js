@@ -1,5 +1,5 @@
-import fs from 'node:fs';
-import { getDefaultDevHub } from './util.js';
+import fs from 'node:fs'
+import { getDefaultDevHub } from './util.js'
 
 export const verifyConditions = async (pluginConfig, { logger }) => {
   if (!fs.existsSync('sfdx-project.json')) {
@@ -14,7 +14,7 @@ export const verifyConditions = async (pluginConfig, { logger }) => {
   }
 
   // check if default is set
-  return getDefaultDevHub().then(defaultDevHub => {
+  return getDefaultDevHub().then((defaultDevHub) => {
     if (!defaultDevHub) {
       throw new Error('Default dev hub not defined')
     }
