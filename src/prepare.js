@@ -91,7 +91,11 @@ export const prepare = async (pluginConfig, context) => {
 
   logger.log(`Package Version Create Result: ${JSON.stringify(latestResult)}`)
 
-  const { InstallUrl } = latestResult
+  let installUrl;
+
+  if (latestResult) {
+    installUrl = latestResult.InstallUrl;
+  }
 
   if (pluginConfig.promote) {
     logger.log('Promoting Package Version')
@@ -122,13 +126,13 @@ export const prepare = async (pluginConfig, context) => {
 
       project.packageAliases[key] = SubscriberPackageVersionId
 
-      logger.log('Updating next release with install url and subscriber package version id', { InstallUrl, SubscriberPackageVersionId })
+      logger.log('Updating next release with install url and subscriber package version id', { installUrl, SubscriberPackageVersionId })
 
-      nextRelease.installUrl = InstallUrl
+      nextRelease.installUrl = installUrl;
       nextRelease.subscriberPackageVersionId = SubscriberPackageVersionId
       nextRelease.packageVersionId = SubscriberPackageVersionId
-      context.nextRelease.notes += '\n\n' + `Install URL: ${InstallUrl}`;
-      context.installUrl = InstallUrl;
+      context.nextRelease.notes += '\n\n' + `Install URL: ${installUrl}`;
+      context.installUrl = installUrl;
       context.packageVersionId = SubscriberPackageVersionId;
     }
 
