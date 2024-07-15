@@ -55,7 +55,7 @@ export const prepare = async (pluginConfig, context) => {
     path: pkg.path,
     tag: version,
     json: true,
-    versionnumber: `${version}.0`,
+    versionnumber: `${version}.NEXT`,
     wait: pluginConfig.versionCreateWait || 15,
     definitionfile: pluginConfig.definitionfile,
     targetdevhubusername: pluginConfig.devhubusername,
