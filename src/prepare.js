@@ -137,6 +137,13 @@ export const prepare = async (pluginConfig, context) => {
     }
 
     fs.writeFileSync('sfdx-project.json', JSON.stringify(project, null, 2))
+
+    // create simple html file that can be used to install the package
+    const sandboxInstall = installUrl.replace('login.salesforce.com', 'test.salesforce.com')
+
+    const htmlContent = `<h1>Install Version: ${nextRelease.subscriberPackageVersionId}</h1><a href="${installUrl}">Install Package in Production</a><br><a href="${sandboxInstall}">Install Package in Sandbox</a>`
+
+    fs.writeFileSync('install.html', htmlContent)
   } catch (ex) {
     logger.error('Failed to update sfdx-project.json', ex)
   }
