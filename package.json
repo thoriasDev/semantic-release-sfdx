@@ -6,15 +6,15 @@
     "node": ">=16"
   },
   "type": "module",
-  "author": "Ross Reicks forked from Bryan Leboff",
+  "author": "TS DEV forked from Bryan Leboff",
   "repository": {
     "type": "git",
-    "url": "https://github.com/rossreicks/semantic-release-sfdx.git"
+    "url": "https://github.com/thoriasDev/semantic-release-sfdx.git"
   },
   "bugs": {
-    "url": "https://github.com/rossreicks/semantic-release-sfdx/issues"
+    "url": "https://github.com/thoriasDev/semantic-release-sfdx/issues"
   },
-  "homepage": "https://github.com/rossreicks/semantic-release-sfdx#readme",
+  "homepage": "https://github.com/thoriasDev/semantic-release-sfdx#readme",
   "keywords": [
     "sfdx",
     "salesforce",
