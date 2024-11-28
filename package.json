@@ -1,7 +1,7 @@
 {
   "name": "semantic-release-sfdx2",
   "description": "Set of semantic-release plugins to publish SFDX Package",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "engines": {
     "node": ">=16"
   },
